@@ -9,32 +9,13 @@ Okta is a SAML identity provider (IdP), that can be easily set-up to do SSO to y
 
 With gimme-aws-creds all you need to know is your username, password, Okta url and MFA token, if MFA is enabled. gimme-aws-creds gives you the option to select which Okta AWS application and role you want credentials for. Alternatively, you can pre-configure the app and role name by passing -c or editing the config file. This is all covered in the usage section.
 
-## Prerequisites
-
-[Okta SAML integration to AWS using the AWS App](https://help.okta.com/en/prod/Content/Topics/Miscellaneous/References/OktaAWSMulti-AccountConfigurationGuide.pdf)
-
-Python 3.6+
-
-### Optional
-
-[Gimme-creds-lambda](https://github.com/Nike-Inc/gimme-aws-creds/tree/master/lambda) can be used as a proxy to the Okta APIs needed by gimme-aws-creds.  This removes the requirement of an Okta API key.  Gimme-aws-creds authenticates to gimme-creds-lambda using OpenID Connect and the lambda handles all interactions with the Okta APIs.  Alternately, you can set the `OKTA_API_KEY` environment variable and the `gimme_creds_server` configuration value to 'internal' to call the Okta APIs directly from gimme-aws-creds.
-
 ## Installation
 
-This is a Python 3 project.
-
-Install/Upgrade from PyPi:
-
-```bash
-pip3 install --upgrade gimme-aws-creds
-```
-
-__OR__
 
 Install/Upgrade the latest gimme-aws-creds package direct from GitHub:
 
 ```bash
-pip3 install --upgrade git+git://github.com/Nike-Inc/gimme-aws-creds.git
+pip3 install --upgrade git+git://github.com/coupa-ops/gimme-aws-creds.git
 ```
 
 __OR__
@@ -45,34 +26,6 @@ Install the gimme-aws-creds package if you have already cloned the source:
 python3 setup.py install
 ```
 
-__OR__
-
-Use homebrew
-
-```bash
-brew install gimme-aws-creds
-```
-
-__OR__
-
-Build the docker image locally:
-
-```bash
-docker build -t gimme-aws-creds .
-```
-
-To make it easier you can also create an alias for the gimme-aws-creds command with docker:
-
-```bash
-# make sure you have the "~/.okta_aws_login_config" locally first!
-touch ~/.okta_aws_login_config && \
-alias gimme-aws-creds="docker run -it --rm \
-  -v ~/.aws/credentials:/root/.aws/credentials \
-  -v ~/.okta_aws_login_config:/root/.okta_aws_login_config \
-  gimme-aws-creds"
-```
-
-With this config, you will be able to run further commands seamlessly!
 
 ## Configuration
 
@@ -270,13 +223,6 @@ for data in creds.iter_selected_aws_credentials():
 
 ## MFA security keys support
 
-gimme-aws-creds works both on FIDO1 enabled org and WebAuthN enabled org
-
-Note that FIDO1 will probably be deprecated in the near future as standards moves forward to WebAuthN
-
-WebAuthN support is available for usb security keys (gimme-aws-creds relies on the yubico fido2 lib).
- 
-To use your local machine as an authenticator, along with Touch ID or Windows Hello, if available,
 you must register a new authenticator via gimme-aws-creds, using:
 ```bash
 gimme-aws-creds --action-setup-fido-authenticator
@@ -284,27 +230,7 @@ gimme-aws-creds --action-setup-fido-authenticator
 
 Then, you can choose the newly registered authenticator from the factors list.
 
-## Running Tests
 
-You can run all the unit tests using nosetests. Most of the tests are mocked.
-
-```bash
-nosetests --verbosity=2 tests/
-```
-
-## Maintenance
-
-This project is maintained by [Ann Wallace](https://github.com/anners), [Eric Pierce](https://github.com/epierce), and [Justin Wiley](https://github.com/sector95).
-
-## Thanks and Credit
-
-I came across [okta_aws_login](https://github.com/nimbusscale/okta_aws_login) written by Joe Keegan, when I was searching for a CLI tool that generates AWS tokens via Okta. Unfortunately it hasn't been updated since 2015 and didn't seem to work with the current Okta version. But there was still some great code I was able to reuse under the MIT license for gimme-aws-creds. I have noted in the comments where I used his code, to make sure he receives proper credit.
-
-## Etc
-
-[Okta's Java tool](https://github.com/oktadeveloper/okta-aws-cli-assume-role)
-
-[AWS - How to Implement Federated API and CLI Access Using SAML 2.0 and AD FS](https://aws.amazon.com/blogs/security/how-to-implement-federated-api-and-cli-access-using-saml-2-0-and-ad-fs/)
 
 ## [Contributing](https://github.com/Nike-Inc/gimme-aws-creds/blob/master/CONTRIBUTING.md)
 
